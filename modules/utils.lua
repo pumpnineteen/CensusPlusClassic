@@ -54,3 +54,15 @@ function CPp.Msg2(msg)
     end
 end
 
+function CPp.debug(...)
+    if not CP_DEBUG then return end
+    
+    local args = {...}
+    local msg = "DEBUG: "
+    for i, v in ipairs(args) do
+        msg = msg .. tostring(v) .. " "
+    end
+    
+    CPp.Msg(msg)
+end
+
