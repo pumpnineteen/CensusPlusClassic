@@ -21,6 +21,7 @@
     <Script file="modules/CensusPlusClassicFrame.lua"/>
     <Script file="modules/MainUI.lua"/>
     <!-- <Include file="OldFrame.xml" /> -->
+    <Script file="modules/Comms.lua"/>
     <Script file="CensusPlusClassic.lua" />
 
     <Button name="CensusPlusLegendTemplate" virtual="true">
