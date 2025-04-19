@@ -12,13 +12,15 @@ local COMM_PREFIX = "CPGOSPROT"              -- Unique prefix for our protocol
 
 local AceComm = LibStub("AceComm-3.0")
 local AceDB = LibStub("AceDB-3.0")
+local AceSerializer = LibStub("AceSerializer-3.0")
 
+local testing = true
 ------------------------------
 -- Database Setup (Realm-Wide)
 ------------------------------
 
 local defaults = {
-    realm = {
+    factionrealm = {
         userDB = {}  -- Format: [playerName] = { lastSeen = <timestamp>, flag = <string> }
     }
 }
@@ -26,11 +28,11 @@ local defaults = {
 local CP_NetworkDB = AceDB:New("CP_NetworkDB", defaults, "Default")
 
 -- Record/update a peer in the shared database.
-local function RecordUser(userName, flag)
-    local entry = CP_NetworkDB.realm.userDB[userName] or {}
+function CPp:RecordUser(userName, flag)
+    local entry = CP_NetworkDB.factionrealm.userDB[userName] or {}
     entry.lastSeen = time()
     entry.flag = flag or entry.flag
-    CP_NetworkDB.realm.userDB[userName] = entry
+    CP_NetworkDB.factionrealm.userDB[userName] = entry
     CPp.debug("Updated active user:", userName, "at", entry.lastSeen)
 end
 
@@ -42,7 +44,7 @@ end
 function CPp:BuildActiveUserPool()
     local activeUsers = {}
     local now = time()
-    for name, info in pairs(CP_NetworkDB.realm.userDB) do
+    for name, info in pairs(CP_NetworkDB.factionrealm.userDB) do
         local delta = now - info.lastSeen
         table.insert(activeUsers, { name = name, delta = delta })
     end
@@ -92,6 +94,9 @@ end
 
 function CPp:OnCommReceived(prefix, message, distribution, sender)
     if prefix ~= COMM_PREFIX then return end
+    CPp.debug("Comm received!")
+    
+    if testing then return end
 
     -- Parse messages. Expect either:
     -- "HELLO:<flag>:<version>" OR "HELLO:<flag>:<version>:<activeList>"
@@ -100,7 +105,7 @@ function CPp:OnCommReceived(prefix, message, distribution, sender)
         local receivedVersion = tonumber(versionStr) or 0
         CPp.debug("Received HELLO from", sender, "flag:", flag, "version:", receivedVersion)
         
-        RecordUser(sender, flag)  -- Update our database for this sender.
+        CPp:RecordUser(sender, flag)  -- Update our database for this sender.
         
         -- Version check: if the received version is higher, alert the user.
         if receivedVersion > CURRENT_VERSION then
@@ -128,16 +133,16 @@ AceComm:RegisterComm(COMM_PREFIX, "OnCommReceived")
 function CPp:ProbeForPeers()
     if IsInGuild() then
         -- Preferred: broadcast to guild if available.
-        SendHello(nil, "init", CURRENT_VERSION)
+        CPp:SendHello(nil, "init", CURRENT_VERSION)
     else
         -- Not in a guild: iterate through our database in ascending order
         -- until the active pool meets the minimum requirement.
         local activePool = CPp:BuildActiveUserPool()
         if #activePool < MIN_POOL_SIZE then
-            print("Active pool below minimum (" .. #activePool .. "). Messaging unknown peers from census...")
+            CPp.debug("Active pool below minimum (" .. #activePool .. "). Messaging unknown peers from census...")
             -- Here, you would iterate through players found during your census.
             -- For this example, we'll simulate by iterating through the database.
-            for name, _ in pairs(CP_NetworkDB.realm.userDB) do
+            for name, _ in pairs(CP_NetworkDB.factionrealm.userDB) do
                 CPp:SendHello(name, "init", CURRENT_VERSION)
             end
         else
@@ -153,12 +158,10 @@ end
 -- Updating the Database on New Finds
 ------------------------------
 
--- Suppose during your census you encounter a new player (not yet in your DB). When detected,
--- you should record them and send a HELLO message.
-function CPp:OnCensusFind(newPlayerName)
-    if not CP_NetworkDB.realm.userDB[newPlayerName] then
-        CPp.debug("New player found in census:", newPlayerName)
-        RecordUser(newPlayerName, "census")
-        SendHello(newPlayerName, "init", CURRENT_VERSION)
-    end
-end
+-- function CPp:OnCensusFind(newPlayerName)
+--     if not CP_NetworkDB.factionrealm.userDB[newPlayerName] then
+--         CPp.debug("New player found in census:", newPlayerName)
+--         CPp.RecordUser(newPlayerName, "census")
+--         CPp:SendHello(newPlayerName, "init", CURRENT_VERSION)
+--     end
+-- end
