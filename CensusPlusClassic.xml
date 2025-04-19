@@ -1,0 +1,260 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
+    <Script file="locales/localization.lua" />
+    <Script file="locales/deDE.lua" />
+    <Script file="locales/esES_esMX.lua" />
+    <Script file="locales/frFR.lua" />
+    <Script file="locales/itIT.lua" />
+    <Script file="locales/koKR.lua" />
+    <Script file="locales/ptBR.lua" />
+    <Script file="locales/ruRU.lua" />
+    <Script file="locales/zhCN.lua" />
+    <Script file="locales/zhTW.lua" />
+    
+    <!-- Core modules -->
+    <Script file="modules/Version.lua"/>
+    <Script file="modules/OptionsTemplates.lua"/>
+    <Script file="modules/OptionsFunctions.lua"/>
+    <Script file="modules/Options.lua"/>
+    <Script file="modules/Classes.lua"/>
+    <Script file="modules/Pruning.lua"/>
+    <!-- <Script file="modules/Templates.lua" /> -->
+    <Script file="modules/CensusPlusClassicFrame.lua"/>
+    <Script file="modules/MainUI.lua"/>
+    <!-- <Include file="OldFrame.xml" /> -->
+    <Script file="CensusPlusClassic.lua" />
+
+    <Button name="CensusPlusLegendTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="32" y="32" />
+        </Size>
+        <NormalTexture file="Interface\AddOns\CensusPlusClassic\skins\CensusPlus_Unknown" />
+        <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD">
+            <Size>
+                <AbsDimension x="32" y="32" />
+            </Size>
+            <Anchors>
+                <Anchor point="TOP">
+                    <Offset>
+                        <AbsDimension x="0" y="0" />
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </HighlightTexture>
+        <Scripts>
+            <OnLeave>
+				 				GameTooltip:Hide();
+						</OnLeave>
+        </Scripts>
+    </Button>
+    
+    <Button name="CensusPlusRaceLegendTemplate" virtual="true" inherits="CensusPlusLegendTemplate">
+        <Scripts>
+            <OnEnter function="CensusPlus_OnEnterRace" />
+            <OnClick function="CensusPlus_OnClickRace" />
+        </Scripts>
+    </Button>
+
+    <Button name="CensusPlusClassLegendTemplate" virtual="true" inherits="CensusPlusLegendTemplate">
+        <Scripts>
+            <OnEnter function="CensusPlus_OnEnterClass" />
+            <OnClick function="CensusPlus_OnClickClass" />
+        </Scripts>
+    </Button>
+    <Button name="CensusPlusBarTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="32" y="128" />
+        </Size>
+        <NormalTexture file="Interface\AddOns\CensusPlusClassic\skins\CensusPlus_Bar" />
+        <Scripts>
+            <OnLeave>
+				 				GameTooltip:Hide();
+						</OnLeave>
+        </Scripts>
+    </Button>
+
+    <Button name="CensusPlusRaceBarTemplate" virtual="true" inherits="CensusPlusBarTemplate">
+        <Scripts>
+            <OnEnter function="CensusPlus_OnEnterRace" />
+        </Scripts>
+    </Button>
+
+    <Button name="CensusPlusClassBarTemplate" virtual="true" inherits="CensusPlusBarTemplate">
+        <Scripts>
+            <OnEnter function="CensusPlus_OnEnterClass" />
+        </Scripts>
+    </Button>
+
+    <Button name="CensusPlusLevelBarTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="10" y="128" />
+        </Size>
+        <NormalTexture file="Interface\AddOns\CensusPlusClassic\skins\CENSUSPLUS_LEVELBar" />
+        <Scripts>
+    		<OnClick function="CensusPlus_OnClickLevel" />
+    		<OnLoad function="CensusPlus_OnLoadLevel"/>
+            <OnLeave>
+				 				GameTooltip:Hide();
+						</OnLeave>
+            <OnEnter function="CensusPlus_OnEnterLevel" />
+        </Scripts>
+    </Button>
+
+    <Button name="CensusPlusLevelBarEmptyTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="10" y="128" />
+        </Size>
+        <Scripts>
+    		<OnClick function="CensusPlus_OnClickLevel" />
+    		<OnLoad function="CensusPlus_OnLoadLevel"/>
+        </Scripts>
+    </Button>
+
+    <Button name="CensusPlusGuildButtonTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="196" y="16" />
+        </Size>
+        <Layers>
+            <Layer level="BORDER">
+                <FontString name="$parentText" inherits="GameFontNormalSmall" justifyH="LEFT">
+                    <Size>
+                        <AbsDimension x="176" y="14" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0" />
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD">
+            <Size>
+                <AbsDimension x="296" y="16" />
+            </Size>
+            <Anchors>
+                <Anchor point="TOP">
+                    <Offset>
+                        <AbsDimension x="0" y="0" />
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </HighlightTexture>
+        <Scripts>
+            <OnClick function="CensusPlus_GuildButton_OnClick" />
+        </Scripts>
+    </Button>
+
+    <Frame name="CensusPlusClassic" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="UIParent">
+        <Size>
+            <AbsDimension x="384" y="512"/>
+        </Size>
+        <Anchors>
+			<Anchor point="CENTER">
+                <Offset>
+                    <AbsDimension x="0" y="0" />
+                </Offset>
+            </Anchor>
+        </Anchors>
+        
+        <!-- Add the close button frame -->
+        <Frames>
+            <Button name="CensusPlusCloseButton" inherits="UIPanelCloseButton">
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <!-- <Scripts>
+                    <OnClick>
+                        HideUIPanel(self:GetParent())
+                    </OnClick>
+                </Scripts> -->
+            </Button>
+        </Frames>
+
+        <Scripts>
+            <OnLoad function="CensusPlus_OnLoad"/>
+            <OnEvent function="CensusPlus_OnEvent"/>
+            <OnShow function="CensusPlus_OnShow"/>
+            <OnUpdate function="CensusPlus_OnUpdate"/>
+            <OnMouseDown function="CensusPlus_Census_OnMouseDown"/>
+            <OnMouseUp>
+                if ( self.isMoving ) then
+                    self:StopMovingOrSizing();
+                    self.isMoving = false;
+                end
+            </OnMouseUp>
+        </Scripts>
+    </Frame>
+
+
+    <Frame name="MiniCensusPlus" parent="UIParent" hidden="true" enableMouse="true" movable="true" toplevel="true">
+        <Size>
+            <AbsDimension x="130" y="30" />
+        </Size>
+        <Anchors>
+            <Anchor point="TOPRIGHT">
+                <Offset>
+                    <AbsDimension x="-350" y="-2" />
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Frames>
+            <Button name="CensusPlusMaximizeButton" inherits="UIPanelButtonTemplate" text="Mini-Census+">
+                <Size>
+                    <AbsDimension x="100" y="21" />
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="MiniCensusPlus">
+                        <Offset>
+                            <AbsDimension x="5" y="-4" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick function="CensusPlus_OnClickMaximize" />
+                    <OnEnter>
+												GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+												GameTooltip:SetText(CENSUSPlus_MAXIMIZE, 1.0, 1.0, 1.0);
+												GameTooltip:Show();
+										</OnEnter>
+                    <OnLeave>
+												GameTooltip:Hide();
+										</OnLeave>
+                </Scripts>
+            </Button>
+            <Button name="MiniCensusPlusCloseButton" inherits="UIPanelCloseButton">
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="1" y="0" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnMouseUp>
+                if ( self.isMoving ) then
+                    self:StopMovingOrSizing();
+                    self.isMoving = false;
+                end
+            </OnMouseUp>
+            <OnMouseDown function="CensusPlus_Mini_OnMouseDown" />
+            <OnHide>
+                if ( self.isMoving ) then
+                    self:StopMovingOrSizing();
+                    self.isMoving = false;
+                end
+            </OnHide>
+        </Scripts>
+    </Frame>
+</Ui>
+
+
+
+
