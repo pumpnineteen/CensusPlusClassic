@@ -43,6 +43,8 @@ elseif CensusPlus_gameMajorVersion == 3 then
     MAX_CHARACTER_LEVEL = 80
 elseif CensusPlus_gameMajorVersion == 4 then
     MAX_CHARACTER_LEVEL = 85
+elseif CensusPlus_gameMajorVersion == 5 then
+    MAX_CHARACTER_LEVEL = 90
 end
 
 -- UI Layout Constants
@@ -53,8 +55,9 @@ CP_LEVEL_BAR_SPACING = 2 -- Space between level bars
 CP_WINDOW_WIDTH = 880
 CP_GUILDS_LEFT_OFFSET = 264 
 
-CENSUSPlus_HORDE    = "Horde";
-CENSUSPlus_ALLIANCE = "Alliance";
+CENSUSPlus_HORDE    = "Horde"
+CENSUSPlus_ALLIANCE = "Alliance"
+CENSUSPlus_NEUTRAL  = "Neutral"
 
 CENSUSPLUS__VERSION = 10000 + 6
 

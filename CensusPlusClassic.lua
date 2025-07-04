@@ -428,6 +428,7 @@ function CensusPlus_OnLoad(self)
     -- CensusPlus_CreateTemplates()
     C_Timer.After(30, macroMessage)
     CPp.Msg("Races: " .. CensusPlus_NumRaces .. " Classes: ".. CensusPlus_NumClasses)
+    CPp.Msg("Wow major version:" .. tostring(CensusPlus_gameMajorVersion))
     CensusPlus_CreateMainFrameBorders()
     CensusPlus_CreateMainFrameButtons()
 
@@ -985,6 +986,13 @@ function CensusPlus_StartCensus()
 	-- used to trigger queue processing when OnUpdate
 	g_FirstRun = true
 	local g_factionGroup = UnitFactionGroup("player")
+
+    if g_factionGroup == CENSUSPlus_NEUTRAL then
+        CPp.IsCensusPlusInProgress = false
+        CPp.Msg(CENSUSPLUS_NOTINFACTION)
+        return
+    end
+
 	local realm = ""
 	local lastjobtimediff = 1
 	local realmName = CensusPlus_GetUniqueRealmName()
@@ -1709,6 +1717,12 @@ end
 
 
 function CensusPlus_AutoStart()
+    if g_factionGroup == CENSUSPlus_NEUTRAL then
+        --  We are not in a faction, so we cannot run a census
+        CPp.AutoCensus = false
+        CPp.Msg(CENSUSPLUS_NOTINFACTION)
+        return
+    end
 
 	local currentRealm = CensusPlus_GetUniqueRealmName()
 	local currentFaction = UnitFactionGroup("player")

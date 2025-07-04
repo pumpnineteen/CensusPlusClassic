@@ -122,7 +122,11 @@ function CPp:OnCommReceived(prefix, message, distribution, sender)
     end
 end
 
-AceComm:RegisterComm(COMM_PREFIX, "OnCommReceived")
+if CPp.RegisterComm then
+    CPp:RegisterComm(COMM_PREFIX, "OnCommReceived")
+else
+    CPp.debug("No RegisterComm...")
+end
 
 ------------------------------
 -- Peer Discovery Logic (Census)

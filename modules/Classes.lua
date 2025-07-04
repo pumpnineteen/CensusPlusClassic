@@ -39,7 +39,10 @@ function CensusPlus_GetFactionRaces(faction)
     -- print("GetRaceClasses: ", faction , " | ", CENSUSPlus_HORDE, CENSUSPlus_ALLIANCE)
     local races = {};
     if (faction == CENSUSPlus_HORDE) then 
-        if CensusPlus_gameMajorVersion >= 4 then  -- Cataclysm
+        if CensusPlus_gameMajorVersion >= 5 then  -- Mop
+            races= {CENSUSPLUS_ORC, CENSUSPLUS_TROLL, CENSUSPLUS_TAUREN, CENSUSPLUS_UNDEAD, 
+                    CENSUSPLUS_BLOODELF, CENSUSPLUS_GOBLIN, CENSUSPLUS_PANDAREN}
+        elseif CensusPlus_gameMajorVersion >= 4 then  -- Cataclysm
             races = {CENSUSPLUS_ORC, CENSUSPLUS_TROLL, CENSUSPLUS_TAUREN, CENSUSPLUS_UNDEAD, 
                     CENSUSPLUS_BLOODELF, CENSUSPLUS_GOBLIN};
         elseif CensusPlus_gameMajorVersion >= 2 then  -- TBC and Wrath
@@ -49,7 +52,10 @@ function CensusPlus_GetFactionRaces(faction)
             races = {CENSUSPLUS_ORC, CENSUSPLUS_TROLL, CENSUSPLUS_TAUREN, CENSUSPLUS_UNDEAD};
         end
     else
-        if CensusPlus_gameMajorVersion >= 4 then  -- Cataclysm
+        if CensusPlus_gameMajorVersion >= 5 then  -- Mop
+            races= {CENSUSPLUS_HUMAN, CENSUSPLUS_DWARF, CENSUSPLUS_NIGHTELF, CENSUSPLUS_GNOME, 
+                    CENSUSPLUS_DRAENEI, CENSUSPLUS_WORGEN, CENSUSPLUS_PANDAREN};
+        elseif CensusPlus_gameMajorVersion >= 4 then  -- Cataclysm
             races = {CENSUSPLUS_HUMAN, CENSUSPLUS_DWARF, CENSUSPLUS_NIGHTELF, CENSUSPLUS_GNOME, 
                     CENSUSPLUS_DRAENEI, CENSUSPLUS_WORGEN};
         elseif CensusPlus_gameMajorVersion >= 2 then  -- TBC and Wrath
@@ -71,7 +77,11 @@ CensusPlus_NumClasses = 8
 
 function CensusPlus_GetFactionClasses(faction)
     local classes = {};
-    if CensusPlus_gameMajorVersion >= 3 then  -- Wrath
+    if CensusPlus_gameMajorVersion >= 5 then  -- Mop
+        classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE,
+                    CENSUSPLUS_PRIEST, CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE,
+                    CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID, CENSUSPLUS_MONK, CENSUSPLUS_DEMONHUNTER};
+    elseif CensusPlus_gameMajorVersion >= 3 then  -- Wrath
         classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE,
                     CENSUSPLUS_PRIEST, CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE,
                     CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID};
@@ -97,7 +107,48 @@ CPp.Msg("CPP Num Classes:" .. CensusPlus_NumClasses)
 
 function GetRaceClasses(race)
     local classes = {};
-    if CensusPlus_gameMajorVersion >= 4 then  -- Cataclysm
+    if CensusPlus_gameMajorVersion >= 5 then  -- Mop
+        if (race == CENSUSPLUS_HUMAN) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
+                      CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK};
+        elseif (race == CENSUSPLUS_DWARF) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE,
+                      CENSUSPLUS_PRIEST, CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE,
+                      CENSUSPLUS_WARLOCK};
+        elseif (race == CENSUSPLUS_NIGHTELF) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
+                      CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_DRUID, CENSUSPLUS_MAGE};
+        elseif (race == CENSUSPLUS_GNOME) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_MAGE,
+                      CENSUSPLUS_WARLOCK, CENSUSPLUS_PRIEST};
+        elseif (race == CENSUSPLUS_DRAENEI) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_PRIEST,
+                      CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE};
+        elseif (race == CENSUSPLUS_WORGEN) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
+                      CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID};
+        elseif (race == CENSUSPLUS_ORC) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_DEATHKNIGHT,
+                      CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK};
+        elseif (race == CENSUSPLUS_UNDEAD) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_DEATHKNIGHT,
+                      CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK};
+        elseif (race == CENSUSPLUS_TAUREN) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_PRIEST,
+                      CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID, CENSUSPLUS_PALADIN};
+        elseif (race == CENSUSPLUS_TROLL) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
+                      CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE, CENSUSPLUS_DRUID,
+                      CENSUSPLUS_WARLOCK};
+        elseif (race == CENSUSPLUS_BLOODELF) then
+            classes = {CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
+                      CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_WARRIOR};
+        elseif (race == CENSUSPLUS_GOBLIN) then
+            classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_DEATHKNIGHT,
+                      CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_PRIEST};
+        end
+
+    elseif CensusPlus_gameMajorVersion >= 4 then  -- Cataclysm
         if (race == CENSUSPLUS_HUMAN) then
             classes = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
                       CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK};
