@@ -985,7 +985,7 @@ function CensusPlus_StartCensus()
 
 	-- used to trigger queue processing when OnUpdate
 	g_FirstRun = true
-	local g_factionGroup = UnitFactionGroup("player")
+	g_factionGroup = UnitFactionGroup("player")
 
     if g_factionGroup == CENSUSPlus_NEUTRAL then
         CPp.IsCensusPlusInProgress = false
