@@ -1717,7 +1717,9 @@ end
 
 
 function CensusPlus_AutoStart()
-    if g_factionGroup == CENSUSPlus_NEUTRAL then
+    local currentFaction = UnitFactionGroup("player")
+    g_factionGroup = currentFaction
+    if currentFaction == CENSUSPlus_NEUTRAL then
         --  We are not in a faction, so we cannot run a census
         CPp.AutoCensus = false
         CPp.Msg(CENSUSPLUS_NOTINFACTION)
@@ -1725,7 +1727,6 @@ function CensusPlus_AutoStart()
     end
 
 	local currentRealm = CensusPlus_GetUniqueRealmName()
-	local currentFaction = UnitFactionGroup("player")
 	local lastRealm = CensusPlus_JobQueue["CensusPlus_LoginRealm_last"]
 	local lastFaction = CensusPlus_JobQueue["CensusPlus_LoginFaction_last"]
 	local lastRun = CensusPlus_JobQueue["CensusPlus_last_time"]
