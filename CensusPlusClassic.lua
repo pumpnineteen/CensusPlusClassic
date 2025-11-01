@@ -426,7 +426,7 @@ end
 function CensusPlus_OnLoad(self)
     -- Load the UI
     -- CensusPlus_CreateTemplates()
-    C_Timer.After(30, macroMessage)
+    -- C_Timer.After(30, macroMessage)
     CPp.Msg("Races: " .. CensusPlus_NumRaces .. " Classes: ".. CensusPlus_NumClasses)
     CPp.Msg("Wow major version:" .. tostring(CensusPlus_gameMajorVersion))
     CensusPlus_CreateMainFrameBorders()
@@ -446,14 +446,6 @@ function CensusPlus_OnLoad(self)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 
-	-- Called once on load
-	-- SLASH_CensusPlusVerbose1 = "/censusverbose";
-	-- SlashCmdList["CensusPlusVerbose"] = CensusPlus_Verbose_toggle("alter");
-	SLASH_CensusPlusCMD1 = "/CensusPlusClassic"
-	SLASH_CensusPlusCMD2 = "/Census+"
-	SLASH_CensusPlusCMD3 = "/Census"
-	SlashCmdList["CensusPlusCMD"] = CensusPlus_Command
-
 	CensusPlus_CheckForBattleground()
 
 	--  Set up an empty frame for updates
@@ -465,6 +457,21 @@ function CensusPlus_OnLoad(self)
 	-- -- the binding will be mapped to a LeftButton click.
 	-- 	ManualWho()
 	-- end)
+end
+
+function CPp:OnInitialize()
+    CensusPlus_Database = CensusPlus_Database or {}
+    CensusPlus_PerCharInfo = CensusPlus_PerCharInfo or {}
+    CensusPlus_FailedQueries = CensusPlus_FailedQueries or {}
+
+    self:RegisterChatCommand("CensusPlusClassic", "CensusPlus_Command")
+    self:RegisterChatCommand("Census+", "CensusPlus_Command")
+    self:RegisterChatCommand("Census", "CensusPlus_Command")
+    self:RegisterChatCommand("CPP", "CensusPlus_Command")
+
+    CPp.Msg("CensusPlusClassic v" .. CensusPlus_VERSION .. CensusPlus_SubVersion .. " initialized.")
+
+    CPp:SetNewsTitle("CensusPlusClassic News")
 end
 
 function InitializeExperimental()
@@ -630,7 +637,7 @@ end
 
 
 -- CensusPlusClassic command
-function CensusPlus_Command(param)
+function CPp:CensusPlus_Command(param)
 	local jcmdend = 0
 	local jvalend = 0
 	local jfolend = 0
@@ -722,18 +729,20 @@ function CensusPlus_Command(param)
 				LoggingChat(false)
 				HortonBug = false
 			end
+        elseif (param == "news") then
+            self:ShowNewsSplash(0)
 		else
-			CensusPlus_DisplayUsage()
+			self:CensusPlus_DisplayUsage()
 		end
 	else
-		CensusPlus_DisplayUsage()
+		self:CensusPlus_DisplayUsage()
 	end
 end
 
 
 
 -- CensusPlusClassic Display Usage
-function CensusPlus_DisplayUsage()
+function CPp:CensusPlus_DisplayUsage()
 	CensusPlusClassic:Show()
 	local stealthUsage = g_stealth
 	g_stealth = false
@@ -763,6 +772,7 @@ function CensusPlus_DisplayUsage()
 	CPp.Msg("  /CensusPlusClassic who unguilded 70" .. CENSUSPLUS_HELP_8)
 	CPp.Msg("  /CensusPlusClassic timer X " .. CENSUSPLUS_HELP_9)
 	CPp.Msg("  /CensusPlusClassic me" .. CENSUSPLUS_HELP_10)
+    CPp.Msg("  /CensusPlusClassic news" .. CENSUSPLUS_HELP_NEWS)
 	g_stealth = stealthUsage
 end
 

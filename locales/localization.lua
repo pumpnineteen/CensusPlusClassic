@@ -613,6 +613,7 @@ CENSUSPLUS_HELP_6 = " X _ Prune the database by removing all characters not seen
 CENSUSPLUS_HELP_7 = " _  Will display info that matches names.";
 CENSUSPLUS_HELP_8 = " _  Will list unguilded characters of that level.";
 CENSUSPLUS_HELP_9 = " _  Will set the autocensus timer (to X minutes).";
+CENSUSPLUS_HELP_NEWS = " _ Show changelog news"
 CENSUSPLUS_ISINBG = "You are currently in a Battleground so a Census cannot be taken";
 CENSUSPLUS_ISINPROGRESS = "A CensusPlusClassic is in progress, try again later";
 CENSUSPLUS_LANGUAGECHANGED = "Client Language changed, Database purged.";

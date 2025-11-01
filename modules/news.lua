@@ -66,7 +66,7 @@ local function GetLatestUnseenNews()
     return latestNewsVersion
 end
 
-function CPp:SetTitle(title)
+function CPp:SetNewsTitle(title)
     default_title = title
 end
 
