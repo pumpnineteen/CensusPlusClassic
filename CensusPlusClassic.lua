@@ -37,7 +37,7 @@
 ]]
 
 local	addon_name, CPp = ...   		-- Addon_name contains the Addon name which must be the same as the container folder name... addon_tableID is a common private table for all .lua files in the directory.
-CPp = LibStub("AceAddon-3.0"):NewAddon(CPp, "AceConsole-3.0", "AceEvent-3.0")
+CPp = LibStub("AceAddon-3.0"):NewAddon(CPp, addon_name, "AceConsole-3.0", "AceEvent-3.0")
 
 local checksum = LibStub:GetLibrary("LibChecksum-1.0", true)
 
@@ -730,6 +730,7 @@ function CPp:CensusPlus_Command(param)
 				HortonBug = false
 			end
         elseif (param == "news") then
+            CPp.Msg("CensusPlusClassic News requested")
             self:ShowNewsSplash(0)
 		else
 			self:CensusPlus_DisplayUsage()
