@@ -1,3 +1,7 @@
+local addon_name, CPp = ... -- Get addon name and shared table
+
+CPp.VERSION = 8
+
 -- Initialize global tables
 CensusPlus_Database = CensusPlus_Database or {}
 CensusPlus_PerCharInfo = CensusPlus_PerCharInfo or {}

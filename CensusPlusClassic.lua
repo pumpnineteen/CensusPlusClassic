@@ -37,7 +37,7 @@
 ]]
 
 local	addon_name, CPp = ...   		-- Addon_name contains the Addon name which must be the same as the container folder name... addon_tableID is a common private table for all .lua files in the directory.
-
+CPp = LibStub("AceAddon-3.0"):NewAddon(CPp, "AceConsole-3.0", "AceEvent-3.0")
 
 local checksum = LibStub:GetLibrary("LibChecksum-1.0", true)
 
@@ -3349,3 +3349,11 @@ end
 --         self.isMoving = false
 --     end
 -- end)
+
+local db_defaults = {}
+
+function CPp:OnEnable()
+    CensusPlus_DB = LibStub("AceDB-3.0"):New("CensusPlusDB", db_defaults)
+    self:InitializeNews(CensusPlus_DB)
+    self:CheckAndShowNews()
+end

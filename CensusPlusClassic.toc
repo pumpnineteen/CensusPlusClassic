@@ -1,4 +1,4 @@
-## Interface: 11507,50501
+## Interface: 11508,50501
 ## Version: v0.8.4
 ## Title: CensusPlusClassic
 ## Notes: This AddOn is licenced under the GNU GPL, see GPL.txt for details.
@@ -11,7 +11,7 @@
 ## Modified By: Christophrus - WoWClassicPopulation.com
 ## Modified By: Pump - Anniversary update
 ## OptionalDeps: LibWho-2.0, LibStub, CallbackHandler-1.0, LibChecksum-1.0
-## SavedVariables: CensusPlus_Database, CensusPlus_CRealms, CensusPlus_Guilds, CensusPlus_JobQueue, CP_DEBUG
+## SavedVariables: CensusPlus_Database, CensusPlus_CRealms, CensusPlus_Guilds, CensusPlus_JobQueue, CP_DEBUG, CensusPlus_DB
 ## SavedVariablesPerCharacter: CensusPlus_PerCharInfo, CensusPlus_FailedQueries
 ## X-Website: http://wowclassicpopulation.com
 
@@ -21,7 +21,10 @@ libs\LibChecksum-1.0\LibChecksum.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 libs\LibRealmID\LibRealmID.lua
 libs\AceComm-3.0\AceComm-3.0.xml
+libs\AceEvent-3.0\AceEvent-3.0.xml
+libs\AceConsole-3.0\AceConsole-3.0.xml
 libs\AceDB-3.0\AceDB-3.0.xml
+libs\AceGUI-3.0\AceGUI-3.0.xml
 libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 libs\AceSerializer-3.0\AceSerializer-3.0.xml
 #@end-no-lib-strip@
