@@ -32,6 +32,7 @@ local VERSION_CHECKS = {
 }
 
 local db -- declare at module level
+local default_title
 
 local function FilterNewsForCurrentVersion(newsItems)
     local filtered = {}
@@ -65,11 +66,15 @@ local function GetLatestUnseenNews()
     return latestNewsVersion
 end
 
+function CPp:SetTitle(title)
+    default_title = title
+end
+
 function CPp.ShowNewsSplash(newsVersion, title)
     local newsItems = NEWS_ITEMS[newsVersion]
     if not newsItems then return end
 
-    title = title or "What's New"
+    title = title or default_title or "What's New"
     
     -- Filter news for current game version
     local filteredNews = FilterNewsForCurrentVersion(newsItems)
