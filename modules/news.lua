@@ -12,7 +12,7 @@ local NEWS_TBC = "tbc"
 local NEWS_WRATH = "wrath"
 local NEWS_CATA = "cata"
 local NEWS_MOP = "mop"
-
+local NEWS_SORT_CHRONOLOGICAL = true -- true = oldest first, false = newest first
 
 local VERSION = CPp.VERSION or 0
 
@@ -66,36 +66,85 @@ local function GetLatestUnseenNews()
     return latestNewsVersion
 end
 
+-- Get all unseen news versions sorted by preference
+local function GetAllUnseenNewsVersions(fromVersion)
+    local versions = {}
+    
+    for version, _ in pairs(NEWS_ITEMS) do
+        if version > fromVersion then
+            table.insert(versions, version)
+        end
+    end
+    
+    table.sort(versions, function(a, b)
+        if NEWS_SORT_CHRONOLOGICAL then
+            return a < b  -- oldest first
+        else
+            return a > b  -- newest first
+        end
+    end)
+    
+    return versions
+end
+
+-- Get filtered news content for a specific version
+local function GetNewsContentForVersion(version)
+    local newsItems = NEWS_ITEMS[version]
+    if not newsItems then return nil end
+    
+    local filteredNews = FilterNewsForCurrentVersion(newsItems)
+    if #filteredNews == 0 then return nil end
+    
+    return table.concat(filteredNews, "\n\n")
+end
+
 function CPp:SetNewsTitle(title)
     default_title = title
 end
 
 function CPp.ShowNewsSplash(newsVersion, title)
-    local newsItems = NEWS_ITEMS[newsVersion]
-    if not newsItems then return end
-
     title = title or default_title or "What's New"
     
-    -- Filter news for current game version
-    local filteredNews = FilterNewsForCurrentVersion(newsItems)
+    -- Get all versions with news newer than newsVersion
+    local versionsToShow = GetAllUnseenNewsVersions(newsVersion)
     
-    -- Don't show window if no relevant news for this version
-    if #filteredNews == 0 then
-        db.global.lastSeenNewsVersion = newsVersion
+    -- No news to show
+    if #versionsToShow == 0 then
         return
     end
     
-    -- Combine all news items with line breaks
-    local newsText = table.concat(filteredNews, "\n\n")
+    -- Build content for each version that has relevant news
+    local newsContent = {}
+    local highestVersion = newsVersion
     
+    for _, version in ipairs(versionsToShow) do
+        local content = GetNewsContentForVersion(version)
+        if content then
+            table.insert(newsContent, {
+                version = version,
+                text = content
+            })
+            if version > highestVersion then
+                highestVersion = version
+            end
+        end
+    end
+    
+    -- Don't show window if no relevant news for current game version
+    if #newsContent == 0 then
+        db.global.lastSeenNewsVersion = highestVersion
+        return
+    end
+    
+    -- Create window
     local window = AceGUI:Create("Window")
     window:SetTitle(title)
     window:SetWidth(300)
-    window:SetHeight(150)
+    window:SetHeight(200)
     window:SetLayout("Flow")
     window:SetCallback("OnClose", function(widget)
-        -- Update the last seen version when window is closed
-        db.global.lastSeenNewsVersion = newsVersion
+        -- Update to the highest version shown
+        db.global.lastSeenNewsVersion = highestVersion
         AceGUI:Release(widget)
     end)
 
@@ -103,24 +152,34 @@ function CPp.ShowNewsSplash(newsVersion, title)
     frame:SetLayout("List")
     window:AddChild(frame)
 
-    -- Add version label
-    local versionLabel = AceGUI:Create("Label")
-    versionLabel:SetText(string.format("|cFFFFD700Version r%d|r", newsVersion))
-    versionLabel:SetFullWidth(true)
-    frame:AddChild(versionLabel)
-    
-    -- Add spacing
-    local spacer1 = AceGUI:Create("Label")
-    spacer1:SetText(" ")
-    spacer1:SetFullWidth(true)
-    frame:AddChild(spacer1)
-    
-    -- Add news text
-    local newsTextWidget = AceGUI:Create("Label")
-    newsTextWidget:SetText(newsText)
-    newsTextWidget:SetFullWidth(true)
-    frame:AddChild(newsTextWidget)
-    
+    -- Add news for each version
+    for i, content in ipairs(newsContent) do
+        -- Add version label
+        local versionLabel = AceGUI:Create("Label")
+        versionLabel:SetText(string.format("|cFFFFD700Version r%d|r", content.version))
+        versionLabel:SetFullWidth(true)
+        frame:AddChild(versionLabel)
+        
+        -- Add spacing after version label
+        local spacer1 = AceGUI:Create("Label")
+        spacer1:SetText(" ")
+        spacer1:SetFullWidth(true)
+        frame:AddChild(spacer1)
+        
+        -- Add news text for this version
+        local newsTextWidget = AceGUI:Create("Label")
+        newsTextWidget:SetText(content.text)
+        newsTextWidget:SetFullWidth(true)
+        frame:AddChild(newsTextWidget)
+        
+        -- Add spacing between versions (but not after the last one)
+        if i < #newsContent then
+            local spacer2 = AceGUI:Create("Label")
+            spacer2:SetText("\n")
+            spacer2:SetFullWidth(true)
+            frame:AddChild(spacer2)
+        end
+    end
 end
 
 function CPp:CheckAndShowNews()
