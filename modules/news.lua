@@ -68,6 +68,7 @@ end
 
 -- Get all unseen news versions sorted by preference
 local function GetAllUnseenNewsVersions(fromVersion)
+    fromVersion = fromVersion or 0
     local versions = {}
     
     for version, _ in pairs(NEWS_ITEMS) do
