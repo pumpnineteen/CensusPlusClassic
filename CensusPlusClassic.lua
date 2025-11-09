@@ -41,6 +41,13 @@ CPp = LibStub("AceAddon-3.0"):NewAddon(CPp, addon_name, "AceConsole-3.0", "AceEv
 
 local checksum = LibStub:GetLibrary("LibChecksum-1.0", true)
 
+local db_defaults = {
+    ["global"] = { ["lastSeenNewsVersion"] = 0,},
+
+}
+
+CensusPlus_DB = LibStub("AceDB-3.0"):New("CensusPlusDB", db_defaults)
+
 CPp.InterfaceVersion = "Captain Placeholder";   -- random value.. must not match CensusPlus_VERSION string.
 local g_CensusPlusTZOffset = -999;
 CPp.LocaleSet = false;  -- not used?
@@ -3361,10 +3368,11 @@ end
 --     end
 -- end)
 
-local db_defaults = {}
+
 
 function CPp:OnEnable()
-    CensusPlus_DB = LibStub("AceDB-3.0"):New("CensusPlusDB", db_defaults)
+    -- print("Latest seen news: r", CensusPlus_DB.global.lastSeenNewsVersion)
     self:InitializeNews(CensusPlus_DB)
     self:CheckAndShowNews()
+    
 end
