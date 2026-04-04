@@ -81,6 +81,7 @@ function CPp:SendHello(target, flag, version, activeList)
 
     if target then
         AceComm:SendCommMessage(COMM_PREFIX, msg, "WHISPER", target)
+        CPp.debug("Sent HELLO to", target, "with flag:", flag, "version:", version, "activeList:", activeList or "none")
     else
         -- If in a guild (and you are), broadcast on GUILD; otherwise, nothing happens.
         -- You might also want to use another channel for public broadcasts.
@@ -94,7 +95,7 @@ end
 
 function CPp:OnCommReceived(prefix, message, distribution, sender)
     if prefix ~= COMM_PREFIX then return end
-    CPp.debug("Comm received!")
+    CPp.debug("Comm received!", sender)
     
     if testing then return end
 
@@ -122,11 +123,16 @@ function CPp:OnCommReceived(prefix, message, distribution, sender)
     end
 end
 
-if CPp.RegisterComm then
-    CPp:RegisterComm(COMM_PREFIX, "OnCommReceived")
-else
-    CPp.debug("No RegisterComm...")
+function CPp.TryRegisterComm()
+    if CPp.RegisterComm then
+        CPp:RegisterComm(COMM_PREFIX, "OnCommReceived")
+        CPp.debug("Registered communication handler for prefix:", COMM_PREFIX)
+    else
+        CPp.debug("No RegisterComm...")
+    end
 end
+
+CPp.TryRegisterComm()
 
 ------------------------------
 -- Peer Discovery Logic (Census)

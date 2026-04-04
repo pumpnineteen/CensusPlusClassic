@@ -722,6 +722,11 @@ function CensusPlus_Command(param)
 				LoggingChat(false)
 				HortonBug = false
 			end
+		elseif (param == "commdebug") then
+			CP_DEBUG = not CP_DEBUG
+			chat("CensusPlusClassic communication debug is now " .. (CP_DEBUG and "ON" or "OFF"))
+		elseif (param == "checkregister") then
+			CPp.TryRegisterComm()
 		else
 			CensusPlus_DisplayUsage()
 		end

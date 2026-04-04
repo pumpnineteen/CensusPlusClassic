@@ -11,6 +11,7 @@ local Options = CPp.Options
 local ENABLE = "Enable"
 local DISABLE = "Disable"
 
+local GetAddOnMetadata = GetAddOnMetadata or C_AddOns.GetAddOnMetadata
 -- Create a header text
 function Options:CensusPlusBlizzardOptions()
 	-- Create main frame for information text

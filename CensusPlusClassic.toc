@@ -1,4 +1,4 @@
-## Interface: 11507,50501
+## Interface: 11508,50503
 ## Version: v0.8.4
 ## Title: CensusPlusClassic
 ## Notes: This AddOn is licenced under the GNU GPL, see GPL.txt for details.
@@ -11,7 +11,7 @@
 ## Modified By: Christophrus - WoWClassicPopulation.com
 ## Modified By: Pump - Anniversary update
 ## OptionalDeps: LibWho-2.0, LibStub, CallbackHandler-1.0, LibChecksum-1.0
-## SavedVariables: CensusPlus_Database, CensusPlus_CRealms, CensusPlus_Guilds, CensusPlus_JobQueue, CP_DEBUG
+## SavedVariables: CensusPlus_Database, CensusPlus_CRealms, CensusPlus_Guilds, CensusPlus_JobQueue, CP_DEBUG, CP_NetworkDB
 ## SavedVariablesPerCharacter: CensusPlus_PerCharInfo, CensusPlus_FailedQueries
 ## X-Website: http://wowclassicpopulation.com
 
