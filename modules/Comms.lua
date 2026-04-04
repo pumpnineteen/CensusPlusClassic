@@ -11,7 +11,7 @@ local ACTIVE_THRESHOLD = 15 * 60             -- Consider users active if seen wi
 
 local COMM_PREFIX = "CPGOSPROT"              -- Unique prefix for our protocol
 
-local AceComm = LibStub("AceComm-3.0")
+-- local AceComm = LibStub("AceComm-3.0")
 local AceDB = LibStub("AceDB-3.0")
 local AceSerializer = LibStub("AceSerializer-3.0")
 
@@ -81,12 +81,12 @@ function CPp:SendHello(target, flag, version, activeList)
     end
 
     if target then
-        AceComm:SendCommMessage(COMM_PREFIX, msg, "WHISPER", target)
+        CPp:SendCommMessage(COMM_PREFIX, msg, "WHISPER", target)
         CPp.debug("Sent HELLO to", target, "with flag:", flag, "version:", version, "activeList:", activeList or "none")
     else
         -- If in a guild (and you are), broadcast on GUILD; otherwise, nothing happens.
         -- You might also want to use another channel for public broadcasts.
-        AceComm:SendCommMessage(COMM_PREFIX, msg, "GUILD")
+        CPp:SendCommMessage(COMM_PREFIX, msg, "GUILD")
     end
 end
 
@@ -96,9 +96,11 @@ end
 
 function CPp:OnCommReceived(prefix, message, distribution, sender)
     if prefix ~= COMM_PREFIX then return end
-    CPp.debug("Comm received!", sender)
+    CPp.debug("Comm received!", sender, message)
     
-    if testing then return end
+    if testing then 
+        CPp:SendHello(sender, "reply", CURRENT_VERSION)    
+    return end
 
     -- Parse messages. Expect either:
     -- "HELLO:<flag>:<version>" OR "HELLO:<flag>:<version>:<activeList>"
@@ -132,8 +134,6 @@ function CPp.TryRegisterComm()
         CPp.debug("No RegisterComm...")
     end
 end
-
-CPp.TryRegisterComm()
 
 ------------------------------
 -- Peer Discovery Logic (Census)

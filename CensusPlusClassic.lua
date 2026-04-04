@@ -261,6 +261,13 @@ g_FactionCheck[CENSUSPLUS_NIGHTELF]	= CENSUSPlus_ALLIANCE;
 g_FactionCheck[CENSUSPLUS_DRAENEI]	= CENSUSPlus_ALLIANCE;
 
 
+function CPp:OnEnable()
+	-- Called when the addon is enabled
+	CPp.Msg("CensusPlusClassic enabled!")
+	CPp.TryRegisterComm()
+end
+
+
 --- PTR debug messages
 local channel = 0
 local channelName = " "
@@ -2084,6 +2091,8 @@ function CensusPlus_SafeCheck(param)
 	end
 end
 
+local pingedToons = {}
+
 -- Add the contents of the who results to the database
 function CensusPlus_ProcessWhoResults(result, numWhoResults)
 	--  If we are in a BG th.en stop a census
@@ -2142,6 +2151,7 @@ function CensusPlus_ProcessWhoResults(result, numWhoResults)
 		class = p.classStr
 		zone = p.area
 		sex = p.gender
+		-- CPp.debug("Who result: " .. name .. " " .. guild .. " " .. level)
 		if (CENSUSPlusFemale[race] ~= nil) then
 			race = CENSUSPlusFemale[race]
 		end
@@ -2159,6 +2169,12 @@ function CensusPlus_ProcessWhoResults(result, numWhoResults)
 			name = string.sub(name, 1, tmpNmst - 1)
 		else
 			realm = CensusPlus_GetUniqueRealmName()
+		end
+
+		local fullName = name .. "-" .. realm
+		if not pingedToons[fullName] then
+			CPp:SendHello(fullName)
+			pingedToons[fullName] = 1
 		end
 
 		if ((guild ~= nil) and (guild ~= "")) then
@@ -2252,6 +2268,7 @@ function CensusPlus_ProcessWhoResults(result, numWhoResults)
 				realmName .. factionGroup .. race .. class .. name .. level .. guild .. lastSeen .. sex
 			)
 		entry[5] = sex
+
 
 		-- 5.3 g_TempCount[name] = class;
 		-- 5.4 g_TempCount[realm][name] = class;
