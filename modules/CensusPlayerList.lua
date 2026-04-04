@@ -33,11 +33,8 @@ local g_PlayerLookupTable = {};
 local CensusPlus_NumPlayerButtons = 20;
 local g_MaxNumListed = 1000;
 
--- Addon_name contains the Addon name which must be the same as the container folder name... addon_tableID is a common private table for all .lua files in the directory.
-local addon_name, addon_tableID = ...
-
---short cut name for private shared table.
-local CPp = addon_tableID  
+local addon_name, addonTable = ...  
+local CPp = addonTable.CPp or {}
 
 function CensusPlus_ShowPlayerList()
 	CP_PlayerListWindow:Show();
@@ -309,4 +306,3 @@ function CensusPlus_List_OnMouseDown( self, button )
 		self.isMoving = true;
 	end
 end
-

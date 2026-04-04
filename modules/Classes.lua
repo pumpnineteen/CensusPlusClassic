@@ -1,4 +1,5 @@
-local	addon_name, CPp = ... 
+local	addon_name, addonTable = ...  
+local CPp = addonTable.CPp or {}
 
 g_RaceClassList = { };						-- Used to pick the right icon
 g_RaceClassList[CENSUSPLUS_DRUID]		 = 10;

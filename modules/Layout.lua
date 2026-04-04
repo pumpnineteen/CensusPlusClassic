@@ -1,4 +1,5 @@
-local addon_name, CPp = ...
+local	addon_name, addonTable = ...  
+local CPp = addonTable.CPp or {}
 
 local Layout = {}
 CPp.Layout = Layout
@@ -93,3 +94,5 @@ function Layout:Initialize()
 end
 
 return Layout
+
+

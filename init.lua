@@ -1,3 +1,11 @@
+local addonName, addonTable = ...
+
+local CPp = LibStub("AceAddon-3.0"):NewAddon(
+    addonName,
+    "AceConsole-3.0",
+    "AceEvent-3.0",
+    "AceComm-3.0"
+)
 -- Initialize global tables
 CensusPlus_Database = CensusPlus_Database or {}
 CensusPlus_PerCharInfo = CensusPlus_PerCharInfo or {}
@@ -62,3 +70,6 @@ CENSUSPlus_NEUTRAL  = "Neutral"
 CENSUSPLUS__VERSION = 10000 + 6
 
 CP_DEBUG = CP_DEBUG or false
+
+
+addonTable.CPp = CPp

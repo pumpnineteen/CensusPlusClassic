@@ -1,3 +1,6 @@
+local	addon_name, addonTable = ...  
+local CPp = addonTable.CPp or {}
+
 local g_AccumulatedPruneData = {};
 
 function CensusPlus_AccumulatePruneData(realm, faction, race, class, name)

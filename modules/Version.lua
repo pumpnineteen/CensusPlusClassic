@@ -1,4 +1,5 @@
-local addon_name, CPp = ...
+local	addon_name, addonTable = ...  
+local CPp = addonTable.CPp or {}
 
 -- Version information
 local CensusPlus_Version_Major = "0" -- changing this number will force a saved data purge

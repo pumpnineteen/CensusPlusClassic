@@ -36,8 +36,8 @@
 --		Modified by christophrus
 ]]
 
-local	addon_name, CPp = ...   		-- Addon_name contains the Addon name which must be the same as the container folder name... addon_tableID is a common private table for all .lua files in the directory.
-
+local	addon_name, addonTable = ...  
+local CPp = addonTable.CPp or {}
 
 local checksum = LibStub:GetLibrary("LibChecksum-1.0", true)
 

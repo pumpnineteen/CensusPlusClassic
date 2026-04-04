@@ -1,4 +1,5 @@
-local addon_name, CPp = ...
+local	addon_name, addonTable = ...  
+local CPp = addonTable.CPp or {}
 
 -- Create module if it doesn't exist
 if not CPp.Options then

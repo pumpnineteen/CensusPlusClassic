@@ -17,8 +17,8 @@
 		along with this program(see GLP.txt); if not, write to the Free Software
 		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ]]
-local	addon_name, addon_tableID = ...   -- Addon_name contains the Addon name which must be the same as the container folder name... addon_tableID is a common private table for all .lua files in the directory.
-local CPp = addon_tableID  --short cut name for private shared table.
+local	addon_name, addonTable = ...  
+local CPp = addonTable.CPp or {}
 --print("Button")
 --print (addon_name)
 --print (addon_tableID) 

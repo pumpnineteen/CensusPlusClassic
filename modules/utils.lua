@@ -1,4 +1,5 @@
-local addon_name, CPp = ... -- Get addon name and shared table
+local	addon_name, addonTable = ...  
+local CPp = addonTable.CPp or {}
 
 
 -- Message functions with debug prints
@@ -65,4 +66,3 @@ function CPp.debug(...)
     
     CPp.Msg(msg)
 end
-
