@@ -40,6 +40,7 @@ local	addon_name, addonTable = ...
 local CPp = addonTable.CPp or {}
 
 local checksum = LibStub:GetLibrary("LibChecksum-1.0", true)
+local ChunkedProcessor = LibStub("LibChunkedProcessor-1.0")
 
 CPp.InterfaceVersion = "Captain Placeholder";   -- random value.. must not match CensusPlus_VERSION string.
 local g_CensusPlusTZOffset = -999;
@@ -262,9 +263,28 @@ g_FactionCheck[CENSUSPLUS_DRAENEI]	= CENSUSPlus_ALLIANCE;
 
 
 function CPp:OnEnable()
+	local AceDB = LibStub("AceDB-3.0")
+	
 	-- Called when the addon is enabled
 	CPp.Msg("CensusPlusClassic enabled!")
 	CPp.TryRegisterComm()
+	CPp.selfName = UnitName("player")
+	CPp.selfRealm = GetRealmName()
+	CPp.Msg("Player Name: " .. CPp.selfName .. " Realm: " .. CPp.selfRealm)
+	CPp.selfFullName = CPp.selfName .. "-" .. CPp.selfRealm
+
+	------------------------------
+	-- Database Setup (Realm-Wide)
+	------------------------------
+
+	local CP_NetworkDB_defaults = {
+		factionrealm = {
+			userDB = {}  -- Format: [playerName] = { lastSeen = <timestamp>, flag = <string> }
+		}
+	}
+
+	local CP_NetworkDB = AceDB:New("CP_NetworkDB", CP_NetworkDB_defaults, "Default")
+	CPp.CP_NetworkDB = CP_NetworkDB
 end
 
 
@@ -734,6 +754,14 @@ function CensusPlus_Command(param)
 			chat("CensusPlusClassic communication debug is now " .. (CP_DEBUG and "ON" or "OFF"))
 		elseif (param == "checkregister") then
 			CPp.TryRegisterComm()
+		elseif (param == "scancomm") then
+			CPp.ScanComm()
+		elseif (param == "fullscan") then
+			CPp.FullScan()
+		elseif (param == "commcount") then
+			CPp.CommsReceivedCount()
+		elseif (param == "togglecommtest") then
+			CPp.testing = not CPp.testing
 		else
 			CensusPlus_DisplayUsage()
 		end
@@ -2091,7 +2119,7 @@ function CensusPlus_SafeCheck(param)
 	end
 end
 
-local pingedToons = {}
+CPp.pingedToons = {}
 
 -- Add the contents of the who results to the database
 function CensusPlus_ProcessWhoResults(result, numWhoResults)
@@ -2172,10 +2200,13 @@ function CensusPlus_ProcessWhoResults(result, numWhoResults)
 		end
 
 		local fullName = name .. "-" .. realm
-		if not pingedToons[fullName] then
-			CPp:SendHello(fullName)
-			pingedToons[fullName] = 1
-		end
+		local fullscan =  ChunkedProcessor and ChunkedProcessor.processes["FullScan"] and ChunkedProcessor.processes["FullScan"].status == "running"
+		if CPp.pingedToons ~= nil and not fullscan then
+			if not CPp.pingedToons[fullName] then
+				CPp:SendHello(fullName)
+				CPp.pingedToons[fullName] = 1
+			end
+		end 
 
 		if ((guild ~= nil) and (guild ~= "")) then
 			local guildName = ""

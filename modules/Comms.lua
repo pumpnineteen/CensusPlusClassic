@@ -12,28 +12,17 @@ local ACTIVE_THRESHOLD = 15 * 60             -- Consider users active if seen wi
 local COMM_PREFIX = "CPGOSPROT"              -- Unique prefix for our protocol
 
 -- local AceComm = LibStub("AceComm-3.0")
-local AceDB = LibStub("AceDB-3.0")
 local AceSerializer = LibStub("AceSerializer-3.0")
+local ChunkedProcessor = LibStub("LibChunkedProcessor-1.0")
 
-local testing = true
-------------------------------
--- Database Setup (Realm-Wide)
-------------------------------
-
-local defaults = {
-    factionrealm = {
-        userDB = {}  -- Format: [playerName] = { lastSeen = <timestamp>, flag = <string> }
-    }
-}
-
-local CP_NetworkDB = AceDB:New("CP_NetworkDB", defaults, "Default")
+CPp.testing = false
 
 -- Record/update a peer in the shared database.
 function CPp:RecordUser(userName, flag)
-    local entry = CP_NetworkDB.factionrealm.userDB[userName] or {}
+    local entry = CPp.CP_NetworkDB.factionrealm.userDB[userName] or {}
     entry.lastSeen = time()
     entry.flag = flag or entry.flag
-    CP_NetworkDB.factionrealm.userDB[userName] = entry
+    CPp.CP_NetworkDB.factionrealm.userDB[userName] = entry
     CPp.debug("Updated active user:", userName, "at", entry.lastSeen)
 end
 
@@ -45,7 +34,7 @@ end
 function CPp:BuildActiveUserPool()
     local activeUsers = {}
     local now = time()
-    for name, info in pairs(CP_NetworkDB.factionrealm.userDB) do
+    for name, info in pairs(CPp.CP_NetworkDB.factionrealm.userDB) do
         local delta = now - info.lastSeen
         table.insert(activeUsers, { name = name, delta = delta })
     end
@@ -82,7 +71,7 @@ function CPp:SendHello(target, flag, version, activeList)
 
     if target then
         CPp:SendCommMessage(COMM_PREFIX, msg, "WHISPER", target)
-        CPp.debug("Sent HELLO to", target, "with flag:", flag, "version:", version, "activeList:", activeList or "none")
+        CPp.debug("Sent HELLO to", target, "with flag:", flag, "version:", version, "activeList:", activeList or "none", "testing:", CPp.testing)
     else
         -- If in a guild (and you are), broadcast on GUILD; otherwise, nothing happens.
         -- You might also want to use another channel for public broadcasts.
@@ -90,15 +79,95 @@ function CPp:SendHello(target, flag, version, activeList)
     end
 end
 
+function CPp:ScanComm()
+    if CPp.pingedToons ~= nil then
+        for name, _ in pairs(CPp.pingedToons) do
+            CPp:SendHello(name, "HELLO", CURRENT_VERSION)
+        end
+    end
+end
+
+
+
+function CPp:FullScan()
+    local function CensusIterator(t)
+        local factionGroup = UnitFactionGroup("player")
+        if (factionGroup == nil or factionGroup == "Neutral") then 
+            return function() end, nil, nil
+        end
+
+        local co = coroutine.wrap(function()
+            for realm, factions in pairs(t) do
+                local races = factions[factionGroup]
+                for race, classes in pairs(races) do
+                    for class, names in pairs(classes) do
+                        for name, data in pairs(names) do
+                            local returnData = {
+                                realm = realm,
+                            }
+                            coroutine.yield(name, returnData)
+                        end
+                    end
+                end
+            end
+        end)
+        return co, nil, nil
+    end
+
+    local database = CensusPlus_Database["Servers"]
+
+    local function createFullName(name, realm)
+        local prefix, shortrealm = unpack(CPp.split(realm, "_"))
+        CPp.debug("Creating full name for", name, "with realm:", realm, "prefix:", prefix, "shortrealm:", shortrealm)
+        if not shortrealm then
+            shortrealm = prefix
+        end
+        if not shortrealm then
+            return name
+        end
+        return name .. "-" .. shortrealm
+    end
+
+    local function computation(name, data)
+        local fullName = createFullName(name, data.realm)
+        CPp:SendHello(fullName, "HELLO", CURRENT_VERSION)
+    end
+
+    local function onDone(job)
+        if job.status == "completed" then
+            CPp.debug("Full scan completed successfully!")
+        elseif job.status == "cancelled" then
+            CPp.debug("Full scan was cancelled.")
+        else
+            CPp.debug("Full scan ended with status:", job.status)
+        end
+    end
+
+    local job = ChunkedProcessor:ProcessLargeTable(database, {
+        processName = "FullScan",
+        iterator    = CensusIterator,
+        computation = computation,
+        chunkSize   = 10, 
+        onDone = onDone,
+    })
+
+    local _ = job and job:start()
+
+
+end
+
 ------------------------------
 -- Communication Handler
 ------------------------------
-
+local comms_received = 0
 function CPp:OnCommReceived(prefix, message, distribution, sender)
     if prefix ~= COMM_PREFIX then return end
-    CPp.debug("Comm received!", sender, message)
+    comms_received = comms_received + 1
+    CPp.debug("Comm received!", sender, message, "Total comms received:", comms_received)
     
-    if testing then 
+    if CPp.testing then
+        local isSelf = sender == CPp.selfFullName or sender == CPp.selfName
+        if isSelf then return end
         CPp:SendHello(sender, "reply", CURRENT_VERSION)    
     return end
 
@@ -124,6 +193,10 @@ function CPp:OnCommReceived(prefix, message, distribution, sender)
             CPp:SendHello(sender, "reply", CURRENT_VERSION, randomPeers)
         end
     end
+end
+
+function CPp.CommsReceivedCount()
+    CPp.Msg("Total comms received: " .. comms_received)
 end
 
 function CPp.TryRegisterComm()
@@ -153,7 +226,7 @@ function CPp:ProbeForPeers()
             CPp.debug("Active pool below minimum (" .. #activePool .. "). Messaging unknown peers from census...")
             -- Here, you would iterate through players found during your census.
             -- For this example, we'll simulate by iterating through the database.
-            for name, _ in pairs(CP_NetworkDB.factionrealm.userDB) do
+            for name, _ in pairs(CPp.CP_NetworkDB.factionrealm.userDB) do
                 CPp:SendHello(name, "init", CURRENT_VERSION)
             end
         else

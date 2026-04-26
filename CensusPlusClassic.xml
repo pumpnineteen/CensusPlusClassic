@@ -15,6 +15,7 @@
     <Script file="modules/OptionsTemplates.lua"/>
     <Script file="modules/OptionsFunctions.lua"/>
     <Script file="modules/Options.lua"/>
+    <Script file="modules/ChunkedProcessor.lua"/>
     <Script file="modules/Classes.lua"/>
     <Script file="modules/Pruning.lua"/>
     <!-- <Script file="modules/Templates.lua" /> -->

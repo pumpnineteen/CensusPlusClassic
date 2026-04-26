@@ -1,6 +1,35 @@
 local	addon_name, addonTable = ...  
 local CPp = addonTable.CPp or {}
 
+function CPp.split(inputstr, delimiter)
+    if inputstr == nil or type(inputstr) ~= "string" then
+        return {}
+    end
+    if delimiter == nil then
+        delimiter = "%s"  -- Default: split by whitespace.
+    end
+    local result = {}
+    for substr in string.gmatch(inputstr, "([^" .. delimiter .. "]+)") do
+        table.insert(result, substr)
+    end
+    return result
+end
+
+function CPp.join(things, joiner)
+    if type(joiner) ~= "string" then
+        error("Joiner must be a string!", joiner)
+        return nil
+    end
+    local result = ""
+    for i, v in ipairs(things) do
+        result = result .. tostring(v)
+        if i < #things then
+            result = result .. joiner
+        end
+    end
+    return result
+end
+
 
 -- Message functions with debug prints
 function CPp.Msg(msg)
