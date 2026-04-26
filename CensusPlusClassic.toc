@@ -1,4 +1,4 @@
-## Interface: 11508,50503,20505
+## Interface: 11508,50504,20505
 ## Version: v0.8.4
 ## Title: CensusPlusClassic
 ## Notes: This AddOn is licenced under the GNU GPL, see GPL.txt for details.
