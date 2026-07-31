@@ -1,4 +1,4 @@
-## Interface: 11508,50504,20505
+## Interface: 11509,50504,20506
 ## Version: v0.8.4
 ## Title: CensusPlusClassic
 ## Notes: This AddOn is licenced under the GNU GPL, see GPL.txt for details.
@@ -17,13 +17,16 @@
 
 #@no-lib-strip@
 libs\LibStub\LibStub.lua
-libs\LibChecksum-1.0\LibChecksum.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
-libs\LibRealmID\LibRealmID.lua
+libs\AceAddon-3.0\AceAddon-3.0.xml
+libs\AceConsole-3.0\AceConsole-3.0.xml
+libs\AceEvent-3.0\AceEvent-3.0.xml
 libs\AceComm-3.0\AceComm-3.0.xml
 libs\AceDB-3.0\AceDB-3.0.xml
 libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 libs\AceSerializer-3.0\AceSerializer-3.0.xml
+libs\LibChecksum-1.0\LibChecksum.lua
+libs\LibRealmID\LibRealmID.lua
 #@end-no-lib-strip@
 
 HashTable.lua
