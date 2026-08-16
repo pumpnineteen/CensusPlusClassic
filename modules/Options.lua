@@ -34,6 +34,7 @@ function Options:CensusPlusBlizzardOptions()
     local category = Settings.RegisterCanvasLayoutCategory(CensusPlusOptions, "CensusPlusClassic")
     Settings.RegisterAddOnCategory(category)
     CPp.settingsCategory = category
+	CPp.settingsID = category:GetID()
 
 
 	-- Create Title frame

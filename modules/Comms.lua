@@ -71,7 +71,7 @@ function CPp:SendHello(target, flag, version, activeList)
 
     if target then
         CPp:SendCommMessage(COMM_PREFIX, msg, "WHISPER", target)
-        CPp.debug("Sent HELLO to", target, "with flag:", flag, "version:", version, "activeList:", activeList or "none", "testing:", CPp.testing)
+        -- CPp.debug("Sent HELLO to", target, "with flag:", flag, "version:", version, "activeList:", activeList or "none", "testing:", CPp.testing)
     else
         -- If in a guild (and you are), broadcast on GUILD; otherwise, nothing happens.
         -- You might also want to use another channel for public broadcasts.

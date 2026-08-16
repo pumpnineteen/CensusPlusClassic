@@ -442,7 +442,8 @@ end
 -- referenced by CensusPlusClassic.xml
 function CensusPlus_ToggleOptions(self)
     PlaySound(856, "Master")
-    Settings.OpenToCategory("CensusPlusClassic") -- Open directly to our category
+    -- Settings.OpenToCategory("CensusPlusClassic") -- Open directly to our category
+	Settings.OpenToCategory(CPp.settingsID or 1) -- Open directly to our category
 end
 
 local function macroMessage()
@@ -453,7 +454,7 @@ end
 function CensusPlus_OnLoad(self)
     -- Load the UI
     -- CensusPlus_CreateTemplates()
-    C_Timer.After(30, macroMessage)
+    -- C_Timer.After(30, macroMessage)
     CPp.Msg("Races: " .. CensusPlus_NumRaces .. " Classes: ".. CensusPlus_NumClasses)
     CPp.Msg("Wow major version:" .. tostring(CensusPlus_gameMajorVersion))
     CensusPlus_CreateMainFrameBorders()
@@ -501,16 +502,6 @@ function InitializeExperimental()
 		WorldFrame:HookScript("OnMouseDown", function(self, button)
 			ManualWho()
 		end)
-        -- WorldFrame:HookScript("OnMouseUp", function(self, button)
-        --     print("WorldFrame Clicked")
-		-- 	ManualWho()
-		-- end)
-
-        -- for _, script in pairs({"OnMouseDown", "OnMouseUp", "OnEnter", "OnLeave"}) do
-        --     if WorldFrame:HasScript(script) then
-        --         print("WorldFrame supports", script)
-        --     end
-        -- end
 	end
 end
 
